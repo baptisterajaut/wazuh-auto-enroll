@@ -110,15 +110,19 @@ EOF
         pacman)
             SUDO_USER_NAME="${SUDO_USER:-}"
             if [[ -z "$SUDO_USER_NAME" ]]; then
-                echo "On Arch, run with sudo (not as direct root) so pikaur can build as your user."
+                echo "On Arch, run with sudo (not as direct root) so the AUR helper can build as your user."
                 exit 1
             fi
-            PIKAUR_PATH=$(sudo -u "$SUDO_USER_NAME" bash -lc "which pikaur" 2>/dev/null || true)
-            if [[ -z "$PIKAUR_PATH" ]]; then
-                echo "pikaur not found for user $SUDO_USER_NAME."
+            AUR_HELPER=""
+            for helper in pikaur yay; do
+                AUR_HELPER=$(sudo -u "$SUDO_USER_NAME" bash -lc "which $helper" 2>/dev/null || true)
+                [[ -n "$AUR_HELPER" ]] && break
+            done
+            if [[ -z "$AUR_HELPER" ]]; then
+                echo "No AUR helper found (pikaur or yay) for user $SUDO_USER_NAME."
                 exit 1
             fi
-            sudo -u "$SUDO_USER_NAME" "$PIKAUR_PATH" -S --noconfirm wazuh-agent
+            sudo -u "$SUDO_USER_NAME" "$AUR_HELPER" -S --noconfirm wazuh-agent
             ;;
     esac
 fi
