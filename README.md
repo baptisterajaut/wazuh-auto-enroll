@@ -22,7 +22,7 @@ group=default
 | `manager`  | Wazuh manager address                    |
 | `password` | Agent enrollment password                |
 | `group`    | Wazuh agent group                        |
-| `name`     | *(optional, Windows only)* Agent name    |
+| `name`     | *(optional)* Agent name (default: hostname) |
 
 The `.key` file is private — never commit it.
 
@@ -39,13 +39,14 @@ sudo ./wazuh-agent-deploy.sh
 sudo ./wazuh-agent-deploy.sh -k /path/to/my.key -n "Living-Room-PC"
 ```
 
-Supported: apt (Debian/Ubuntu), yum (RHEL/CentOS), pacman/pikaur (Arch).
+Supported: apt (Debian/Ubuntu), yum (RHEL/CentOS), pacman + pikaur/yay (Arch).
 If the package manager is not supported (e.g. NixOS), install the agent manually then re-run the script to enroll.
 
 ## Windows
 
 1. Download `wazuh-agent-deploy.bat` and `config.key` into the same folder
 2. Right-click the `.bat` → **Run as administrator**
+3. If no `name` is set in `config.key`, the script will prompt for an agent name (press Enter to use the hostname)
 
 ## Linux options
 
