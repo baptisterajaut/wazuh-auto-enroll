@@ -54,3 +54,13 @@ If the package manager is not supported (e.g. NixOS), install the agent manually
 |--------|----------------------------------------------|
 | `-k`   | Path to `.key` file (default: `config.key` next to the script) |
 | `-n`   | Agent name (default: hostname)               |
+
+## Discord alerting
+
+`custom-discord.py` is a drop-in replacement for Wazuh's stock `slack` integration that fixes compatibility with Discord's `/slack` webhook endpoint:
+
+- Adds required top-level `text` field
+- Removes unsupported `ts` field
+- Falls back to `rule.description` when `full_log` is absent (e.g. vulnerability detector alerts)
+
+Install to `/var/ossec/integrations/custom-discord.py` on the manager, copy the stock `slack` wrapper as `custom-discord`, and set `<name>custom-discord</name>` in `ossec.conf`. Survives Wazuh upgrades.
